@@ -12,6 +12,8 @@ from tensorflow.keras.applications.mobilenet import MobileNet
 from calculate_hog import calculate_hog
 from calculate_cnn import calculate_cnn
 from sklearn.decomposition import PCA  
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import plot_roc_curve 
 
 def assignment_classification(plot=False):
     ## Load the features (requires assignment 1 to be completed)
@@ -128,7 +130,7 @@ def assignment_classification(plot=False):
     #     plt.xlabel("Predicted Label")
     #     plt.ylabel("Actual Label")
     #     plt.show()
-
+    '''
     ## Exercise 2.5: Apply PCA to reduce the dimensionality to 20
     # Use sklearn.decomposition.PCA
     # Recompute and plot the confusion matrices for all feature and classifier combinations (6 in total)
@@ -194,27 +196,55 @@ def assignment_classification(plot=False):
         plt.xlabel("Predicted Label")
         plt.ylabel("Actual Label")
         plt.show()
-'''
+
     ## Exercise 2.6: Evaluate the accuracy_score for varying values of k of the k-NN
     # Plot the accuracy_score against the k parameter
     if plot:
-# #YOUR_CODE_HERE
+        ks = [1,5,10,15,20,25,30,35,40,45]
+        accuracy = []
+        for k in ks:
+            model = kNN(n_neighbors=k)
+            model.fit(data["features_pca"]["hog"]["train"], data["y_train"])
+            y_pred = model.predict(data["features_pca"]["hog"]["test"])
+            accuracy.append(accuracy_score(data["y_test"], y_pred))
+        plt.plot(ks,accuracy)
+        plt.show()
+        
 
 
     ## Exercise 2.7: Evaluate the accuracy_score for varying values of C of the SVM
     # Plot the accuracy_score against the k parameter
     if plot:
-# #YOUR_CODE_HERE
-
+        cs = [0.001, 0.005, 0.075, 0.1, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75]
+        accuracy = []
+        for k in cs:
+            model = SVC(kernel = 'rbf', C=k)
+            model.fit(data["features"]["hog"]["train"], data["y_train"])
+            y_pred = model.predict(data["features"]["hog"]["test"])
+            accuracy.append(accuracy_score(data["y_test"], y_pred))
+        plt.plot(cs,accuracy)
+        plt.show()
+        '''
     ## Exercise 2.8: Plot ROC curves
     # Create a single plot with the three ROC curves (one for each feature type) with the SVM
     if plot:
-# #YOUR_CODE_HERE
-
+        fig,ax= plt.subplots(figsize=(10,10))
+        model = SVC(kernel = 'rbf', C=2)
+        model.fit(data["features"]["int"]["train"], data["y_train"])
+        plot_roc_curve(model, data["features"]["int"]["test"], data["y_test"], ax=ax, name= "int")
+        
+        model = SVC(kernel = 'rbf', C=2)
+        model.fit(data["features"]["hog"]["train"], data["y_train"])
+        plot_roc_curve(model, data["features"]["hog"]["test"], data["y_test"], ax=ax, name= "hog")
+        
+        model = SVC(kernel = 'rbf', C=2)
+        model.fit(data["features"]["cnn"]["train"], data["y_train"])
+        plot_roc_curve(model, data["features"]["cnn"]["test"], data["y_test"], ax=ax, name= "cnn")
+        plt.show()
+        
     # Save the results to disk to use in later exercises
     np.save('assignment_classification.npy', data)
-'''
-    # return data
 
+    # return data
 if __name__ == '__main__':
     assignment_classification(plot=True)
