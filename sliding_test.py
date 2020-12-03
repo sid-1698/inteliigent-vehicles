@@ -1,0 +1,3 @@
+import image_processing
+
+image_processing.sliding_window_demo()
