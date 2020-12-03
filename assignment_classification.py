@@ -29,6 +29,7 @@ def assignment_classification(plot=False):
     # Complete the code below
     # Save the resulting trained svm in the dictionary
     # Use kernel='rbf' and C=100
+    '''
     kernel='rbf'
     C=2
     model = SVC(kernel=kernel, C=C)
@@ -99,99 +100,101 @@ def assignment_classification(plot=False):
     #     plt.suptitle('Confusion matrices for the feature/classifier combinations')
     #     plt.show()
 
-
+    '''
     ## Exercise 2.4: Construct a new test set by adding an intensity of 30 to the original test set
     # Recalculate and plot the confusion matrices
 
-    X_test_int_intensity = [increase_intensity(image,30) for image in data["features"]["int"]["test"]]
-    X_test_hog_intensity = calculate_hog(X_test_int_intensity)
-    model = MobileNet(weights='imagenet', include_top=False)
-    X_test_cnn_intensity = calculate_cnn(model, X_test_int_intensity)
-    data["features"]["int"]["new_test"] = X_test_int_intensity
-    data["features"]["hog"]["new_test"] = X_test_hog_intensity
-    data["features"]["cnn"]["new_test"] = X_test_cnn_intensity
-    if plot:
-        fig, axes = plt.subplots(nrows=3, ncols=2, figsize=(10,10))
-        for i, (feat, items) in enumerate(data["features"].items()):
-            for j, (classifier, model) in enumerate(items["classifier"].items()):
-                # print(feat, classifier)
-                # print(items["train"].shape, items["test"].shape, len(data["y_test"]))
-                index = j + i * len(items["classifier"].keys())
-                ax = axes.flatten()[index]
-                ax.axes.get_xaxis().get_label().set_visible(False)
-                ax.axes.get_yaxis().get_label().set_visible(False)
-                plot_confusion_matrix(model, items["new_test"], data["y_test"], cmap="Blues", ax=ax)     
-                ax.set_title(feat+"_"+classifier)    
+    # X_test_int_intensity = [increase_intensity(image,30) for image in data["features"]["int"]["test"]]
+    # X_test_hog_intensity = calculate_hog(X_test_int_intensity)
+    # model = MobileNet(weights='imagenet', include_top=False)
+    # X_test_cnn_intensity = calculate_cnn(model, X_test_int_intensity)
+    # data["features"]["int"]["new_test"] = X_test_int_intensity
+    # data["features"]["hog"]["new_test"] = X_test_hog_intensity
+    # data["features"]["cnn"]["new_test"] = X_test_cnn_intensity
+    # if plot:
+    #     fig, axes = plt.subplots(nrows=3, ncols=2, figsize=(10,10))
+    #     for i, (feat, items) in enumerate(data["features"].items()):
+    #         for j, (classifier, model) in enumerate(items["classifier"].items()):
+    #             # print(feat, classifier)
+    #             # print(items["train"].shape, items["test"].shape, len(data["y_test"]))
+    #             index = j + i * len(items["classifier"].keys())
+    #             ax = axes.flatten()[index]
+    #             ax.axes.get_xaxis().get_label().set_visible(False)
+    #             ax.axes.get_yaxis().get_label().set_visible(False)
+    #             plot_confusion_matrix(model, items["new_test"], data["y_test"], cmap="Blues", ax=ax)     
+    #             ax.set_title(feat+"_"+classifier)    
 
-        plt.suptitle('Confusion matrices for the feature/classifier combinations - Increased Intensity')
-        plt.xlabel("Predicted Label")
-        plt.ylabel("Actual Label")
-        plt.show()
+    #     plt.suptitle('Confusion matrices for the feature/classifier combinations - Increased Intensity')
+    #     plt.xlabel("Predicted Label")
+    #     plt.ylabel("Actual Label")
+    #     plt.show()
 
     ## Exercise 2.5: Apply PCA to reduce the dimensionality to 20
     # Use sklearn.decomposition.PCA
     # Recompute and plot the confusion matrices for all feature and classifier combinations (6 in total)
     # Take a look at the code of the previous exercises and use the relevant parts to complete this exercise
     if plot:
+        data["features_pca"]={}
         pca = PCA(n_components=20)
-        data["features"]["int_pca"] = {}
-        data["features"]["hog_pca"] = {}
-        data["features"]["cnn_pca"] = {}
+        data["features_pca"]["int"] = {}
+        data["features_pca"]["hog"] = {}
+        data["features_pca"]["cnn"] = {}
 
-        data["features"]["int_pca"]["train"] = pca.fit_transform(data["features"]["int"]["train"])
-        data["features"]["int_pca"]["test"] = pca.fit_transform(data["features"]["int"]["test"])
+        data["features_pca"]["int"]["train"]= pca.fit_transform(data["features"]["int"]["train"])
+        data["features_pca"]["int"]["test"] = pca.fit_transform(data["features"]["int"]["test"])
 
-        data["features"]["hog_pca"]["train"] = pca.fit_transform(data["features"]["hog"]["train"])
-        data["features"]["hog_pca"]["test"] = pca.fit_transform(data["features"]["hog"]["test"])
+        data["features_pca"]["hog"]["train"] = pca.fit_transform(data["features"]["hog"]["train"])
+        data["features_pca"]["hog"]["test"] = pca.fit_transform(data["features"]["hog"]["test"])
 
-        data["features"]["cnn_pca"]["train"] = pca.fit_transform(data["features"]["cnn"]["train"])
-        data["features"]["cnn_pca"]["test"] = pca.fit_transform(data["features"]["cnn"]["test"])
+        data["features_pca"]["cnn"]["train"] = pca.fit_transform(data["features"]["cnn"]["train"])
+        data["features_pca"]["cnn"]["test"] = pca.fit_transform(data["features"]["cnn"]["test"])
 
-        data["features"]["int_pca"]["classifier"] = {}
-        data["features"]["hog_pca"]["classifier"] = {}
-        data["features"]["cnn_pca"]["classifier"] = {}
+        data["features_pca"]["int"]["classifier"] = {}
+        data["features_pca"]["hog"]["classifier"] = {}
+        data["features_pca"]["cnn"]["classifier"] = {}
 
         kernel='rbf'
         C=2
         model = SVC(kernel=kernel, C=C)
-        model.fit(data["features"]["int_pca"]["train"], data["y_train"])
-        data["features"]["int_pca"]["classifier"]["svm"] = model
+        model.fit(data["features_pca"]["int"]["train"], data["y_train"])
+        data["features_pca"]["int"]["classifier"]["svm"] = model
 
         model = SVC(kernel=kernel, C=C)
-        model.fit(data["features"]["hog_pca"]["train"], data["y_train"])
-        data["features"]["hog_pca"]["classifier"]["svm"] = model
+        model.fit(data["features_pca"]["hog"]["train"], data["y_train"])
+        data["features_pca"]["hog"]["classifier"]["svm"] = model
 
         model = SVC(kernel=kernel, C=C)
-        model.fit(data["features"]["cnn_pca"]["train"], data["y_train"])
-        data["features"]["cnn_pca"]["classifier"]["svm"] = model
+        model.fit(data["features_pca"]["cnn"]["train"], data["y_train"])
+        data["features_pca"]["cnn"]["classifier"]["svm"] = model
 
         k=1
         model = kNN(n_neighbors=k)
-        model.fit(data["features"]["int_pca"]["train"], data["y_train"])
-        data["features"]["int_pca"]["classifier"]["svm"] = model
+        model.fit(data["features_pca"]["int"]["train"], data["y_train"])
+        data["features_pca"]["int"]["classifier"]["knn"] = model
 
         model = kNN(n_neighbors=k)
-        model.fit(data["features"]["hog_pca"]["train"], data["y_train"])
-        data["features"]["hog_pca"]["classifier"]["svm"] = model
+        model.fit(data["features_pca"]["hog"]["train"], data["y_train"])
+        data["features_pca"]["hog"]["classifier"]["knn"] = model
 
         model = kNN(n_neighbors=k)
-        model.fit(data["features"]["cnn_pca"]["train"], data["y_train"])
-        data["features"]["cnn_pca"]["classifier"]["svm"] = model
+        model.fit(data["features_pca"]["cnn"]["train"], data["y_train"])
+        data["features_pca"]["cnn"]["classifier"]["knn"] = model
 
         fig, axes = plt.subplots(nrows=3, ncols=2, figsize=(10,10))
-        for i, (feat, items) in enumerate(data["features"].items()):
+        for i, (feat, items) in enumerate(data["features_pca"].items()):
             for j, (classifier, model) in enumerate(items["classifier"].items()):
                 index = j + i * len(items["classifier"].keys())
+                ax = axes.flatten()[index]
                 ax.axes.get_xaxis().get_label().set_visible(False)
                 ax.axes.get_yaxis().get_label().set_visible(False)
-                plot_confusion_matrix(model, items["new_test"], data["y_test"], cmap="Blues", ax=ax)     
+                plot_confusion_matrix(model, items["test"], data["y_test"], cmap="Blues", ax=ax)     
                 ax.set_title(feat+"_"+classifier)
 
-        plt.suptitle('Confusion matrices for the feature/classifier combinations - Increased Intensity')
+        plt.suptitle('Confusion matrices for the feature/classifier combinations - PCA')
         plt.xlabel("Predicted Label")
         plt.ylabel("Actual Label")
         plt.show()
-
+'''
     ## Exercise 2.6: Evaluate the accuracy_score for varying values of k of the k-NN
     # Plot the accuracy_score against the k parameter
     if plot:
