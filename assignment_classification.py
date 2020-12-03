@@ -11,6 +11,7 @@ from image_processing import increase_intensity
 from tensorflow.keras.applications.mobilenet import MobileNet
 from calculate_hog import calculate_hog
 from calculate_cnn import calculate_cnn
+from sklearn.decomposition import PCA  
 
 def assignment_classification(plot=False):
     ## Load the features (requires assignment 1 to be completed)
@@ -127,21 +128,69 @@ def assignment_classification(plot=False):
         plt.ylabel("Actual Label")
         plt.show()
 
-'''
     ## Exercise 2.5: Apply PCA to reduce the dimensionality to 20
     # Use sklearn.decomposition.PCA
     # Recompute and plot the confusion matrices for all feature and classifier combinations (6 in total)
     # Take a look at the code of the previous exercises and use the relevant parts to complete this exercise
     if plot:
+        pca = PCA(n_components=20)
+        data["features"]["int_pca"] = {}
+        data["features"]["hog_pca"] = {}
+        data["features"]["cnn_pca"] = {}
+
+        data["features"]["int_pca"]["train"] = pca.fit_transform(data["features"]["int"]["train"])
+        data["features"]["int_pca"]["test"] = pca.fit_transform(data["features"]["int"]["test"])
+
+        data["features"]["hog_pca"]["train"] = pca.fit_transform(data["features"]["hog"]["train"])
+        data["features"]["hog_pca"]["test"] = pca.fit_transform(data["features"]["hog"]["test"])
+
+        data["features"]["cnn_pca"]["train"] = pca.fit_transform(data["features"]["cnn"]["train"])
+        data["features"]["cnn_pca"]["test"] = pca.fit_transform(data["features"]["cnn"]["test"])
+
+        data["features"]["int_pca"]["classifier"] = {}
+        data["features"]["hog_pca"]["classifier"] = {}
+        data["features"]["cnn_pca"]["classifier"] = {}
+
+        kernel='rbf'
+        C=2
+        model = SVC(kernel=kernel, C=C)
+        model.fit(data["features"]["int_pca"]["train"], data["y_train"])
+        data["features"]["int_pca"]["classifier"]["svm"] = model
+
+        model = SVC(kernel=kernel, C=C)
+        model.fit(data["features"]["hog_pca"]["train"], data["y_train"])
+        data["features"]["hog_pca"]["classifier"]["svm"] = model
+
+        model = SVC(kernel=kernel, C=C)
+        model.fit(data["features"]["cnn_pca"]["train"], data["y_train"])
+        data["features"]["cnn_pca"]["classifier"]["svm"] = model
+
+        k=1
+        model = kNN(n_neighbors=k)
+        model.fit(data["features"]["int_pca"]["train"], data["y_train"])
+        data["features"]["int_pca"]["classifier"]["svm"] = model
+
+        model = kNN(n_neighbors=k)
+        model.fit(data["features"]["hog_pca"]["train"], data["y_train"])
+        data["features"]["hog_pca"]["classifier"]["svm"] = model
+
+        model = kNN(n_neighbors=k)
+        model.fit(data["features"]["cnn_pca"]["train"], data["y_train"])
+        data["features"]["cnn_pca"]["classifier"]["svm"] = model
+
         fig, axes = plt.subplots(nrows=3, ncols=2, figsize=(10,10))
         for i, (feat, items) in enumerate(data["features"].items()):
             for j, (classifier, model) in enumerate(items["classifier"].items()):
                 index = j + i * len(items["classifier"].keys())
-                ax = axes.flatten()[index]
-# #YOUR_CODE_HERE
-        plt.suptitle('Confusion matrices after applying dimensionality reduction using PCA')
-        plt.show()
+                ax.axes.get_xaxis().get_label().set_visible(False)
+                ax.axes.get_yaxis().get_label().set_visible(False)
+                plot_confusion_matrix(model, items["new_test"], data["y_test"], cmap="Blues", ax=ax)     
+                ax.set_title(feat+"_"+classifier)
 
+        plt.suptitle('Confusion matrices for the feature/classifier combinations - Increased Intensity')
+        plt.xlabel("Predicted Label")
+        plt.ylabel("Actual Label")
+        plt.show()
 
     ## Exercise 2.6: Evaluate the accuracy_score for varying values of k of the k-NN
     # Plot the accuracy_score against the k parameter
