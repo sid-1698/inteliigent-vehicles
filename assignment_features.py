@@ -10,11 +10,12 @@ import numpy as np
 
 def assignment_features(plot=False):
 	# Load data
-# # 	X_train_int: Training set images as 1-dimensional feature vectors
-# # 	X_test_int: Test set images as 1-dimensional feature vectors
-# # 	y_train: Labels of the training data
-# 	y_test Labels of the test data
+    # 	X_train_int: Training set images as 1-dimensional feature vectors
+    # X_test_int: Test set images as 1-dimensional feature vectors
+    # y_train: Labels of the training data
+    # y_test Labels of the test data
 	X_train_int, X_test_int, y_train, y_test = load_data()
+
 	## Exercise 1.1: Visualize the intensity data.
 	# You will need to complete the code in
 	#    int_to_image.py
@@ -27,6 +28,7 @@ def assignment_features(plot=False):
 			img = int_to_image(samples[i,:])
 			ax.imshow((img), cmap='gray', vmin=0, vmax=255)
 			plt.axis("off")
+        plt.title("Visualizing 10 samples from both classes")
 		plt.show()
 
 	## Exercise 1.2: Visualize HOG for varying number of orientations
