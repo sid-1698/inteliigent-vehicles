@@ -72,13 +72,12 @@ class Detector:
             raise RuntimeError("Error opening VideoCapture.")
         (grabbed, frame) = cap.read()
         (h, w) = frame.shape[:2]
-
-
         scale = 1.3
 
 
         if write:
             vidFilename = datetime.now().strftime("%Y%m%d%H%M") + ".avi"
+            print(vidFilename)
             fourcc = cv2.VideoWriter_fourcc('M', 'J', 'P', 'G')
             writer = cv2.VideoWriter(vidFilename, fourcc, write_fps, (w, h))
 

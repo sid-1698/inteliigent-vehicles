@@ -244,6 +244,6 @@ def assignment_classification(plot=False):
     # Save the results to disk to use in later exercises
     np.save("assignment_classification.npy", data)
 
-    # return data
+    return data
 if __name__ == "__main__":
     assignment_classification(plot=True)
