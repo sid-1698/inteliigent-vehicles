@@ -22,8 +22,10 @@ if Path("assignment_features.npy").is_file():
 else:
     data = assignment_features()
 
-X_train = data["featureS"]["hog"]["train"]
+X_train = data["features"]["hog"]["train"]
 y_train = data["y_train"]
 
-grid = GridSearchCV(estimator=pipe, param_grid=param_grid, refit=True, cv='warn', verbose=3)
+grid = GridSearchCV(estimator=pipe, param_grid=param_grid, refit=True, verbose=3)
 grid.fit(X_train, y_train)
+print (grid.best_estimator_)
+print(grid.cv_results_["mean_test_score"])
