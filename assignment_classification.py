@@ -48,13 +48,13 @@ def assignment_classification(plot=False):
 
     # Check if the SVM is stored and can be used in later parts of the assignment
     if not "svm" in data["features"]["int"]["classifier"]:
-        print("store the trained svm in data["features"]["int"]["classifier"]["svm"], exiting..")
+        print("store the trained svm in data['features']['int']['classifier']['svm'], exiting..")
         sys.exit(-1)
     if not "svm" in data["features"]["hog"]["classifier"]:
-        print("store the trained svm in data["features"]["hog"]["classifier"]["svm"], exiting..")
+        print("store the trained svm in data['features']['hog']['classifier']['svm'], exiting..")
         sys.exit(-1)
     if not "svm" in data["features"]["cnn"]["classifier"]:
-        print("store the trained svm in data["features"]["cnn"]["classifier"]["svm"], exiting..")
+        print("store the trained svm in data['features']['cnn']['classifier']['svm'], exiting..")
         sys.exit(-1)
 
     ## Exercise 2.2: Train the k-NN classifier on all three feature sets with k = 1
@@ -75,13 +75,13 @@ def assignment_classification(plot=False):
 
     # Check if the k-NN classifier is stored and can be used in later parts of the assignment
     if not "knn" in data["features"]["int"]["classifier"]:
-        print("store the trained knn in data["features"]["int"]["classifier"]["knn"], exiting..")
+        print("store the trained knn in data['features']['int']['classifier']['knn'], exiting..")
         sys.exit(-1)
     if not "knn" in data["features"]["hog"]["classifier"]:
-        print("store the trained knn in data["features"]["hog"]["classifier"]["knn"], exiting..")
+        print("store the trained knn in data['features']['hog']['classifier']['knn'], exiting..")
         sys.exit(-1)
     if not "knn" in data["features"]["cnn"]["classifier"]:
-        print("store the trained knn in data["features"]["cnn"]["classifier"]["knn"], exiting..")
+        print("store the trained knn in data['features']['cnn']['classifier']['knn'], exiting..")
         sys.exit(-1)
 
     ## Exercise 2.3: Plot the confusion matrices for all feature and classifier combinations (6 in total)
