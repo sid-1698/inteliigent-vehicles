@@ -10,22 +10,42 @@ from assignment_classification import assignment_classification
 from sklearn.pipeline import Pipeline
 from sklearn.svm import SVC
 from sklearn.decomposition import PCA
+from sklearn.model_selection import GridSearchCV
+import matplotlib.pyplot as plt
 
 ## Load the features (requires assignment 1 to be completed)
-# if Path('assignment_classification.npy').is_file():
-# 	data = np.load('assignment_features.npy', allow_pickle=True).item()
-# else:
-# 	data = assignment_classification()
-data = np.load('assignment_features.npy', allow_pickle=True).item()
-## Exercise 3.1
+if Path('assignment_classification.npy').is_file():
+	data = np.load('assignment_features.npy', allow_pickle=True).item()
+else:
+	data = assignment_classification()
+
+# Exercise 3.1
 # Find the best performing classifier
-# #YOUR_CODE_HERE
+pca  = PCA()
+clf = SVC(kernel = "rbf", gamma = "scale")
+pipe = Pipeline(steps=[("PCA", pca), ("Classifier", clf)])
+param_grid = {"PCA__n_components" : [15,20,25,30,35,40,45],
+              "Classifier__C" : [0.001, 0.005, 0.01, 0.02, 0.04, 0.1, 0.5, 1, 2, 5, 10]}
+data["features"]["hog"]["all"] = np.concatenate([data["features"]["hog"]["train"], data["features"]["hog"]["test"]])
+data["y_all"] = np.concatenate([data["y_train"], data["y_test"]])
+X_train = data["features"]["hog"]["all"]
+y_train = data["y_all"]
+
+grid = GridSearchCV(estimator=pipe, param_grid=param_grid, refit=True, verbose=3)
+grid.fit(X_train, y_train)
+model = grid.best_estimator_
+
+_,(ax1,ax2)=plt.subplots(2,1,figsize=(15,15))
+pipe.fit(data["features"]["hog"]["train"], data["y_train"])
+plot_confusion_matrix(model, data["features"]["hog"]["test"], data["y_test"], cmap="Blues", ax=ax1)
+pipe.fit(data["features"]["cnn"]["train"], data["y_train"])
+plot_confusion_matrix(model, data["features"]["cnn"]["test"], data["y_test"], cmap="Blues", ax=ax2)
+plt.show()
 
 pca  = PCA(n_components=(35))
 clf = SVC(kernel = "rbf", gamma = "scale", C=5)
 model = Pipeline(steps=[("PCA", pca), ("Classifier", clf)])
-data["features"]["hog"]["all"] = np.concatenate([data["features"]["hog"]["train"], data["features"]["hog"]["test"]])
-data["y_all"] = np.concatenate([data["y_train"], data["y_test"]])
+
 model.fit(data["features"]["hog"]["all"], data["y_all"])
 print("Model Trained")
 # Load video
