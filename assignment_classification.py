@@ -32,6 +32,7 @@ def assignment_classification(plot=False):
     # Complete the code below
     # Save the resulting trained svm in the dictionary
     # Use kernel='rbf' and C=100
+    
     kernel="rbf"
     C=2
     model = SVC(kernel=kernel, C=C)
@@ -90,8 +91,6 @@ def assignment_classification(plot=False):
         _, axes = plt.subplots(nrows=3, ncols=2, figsize=(10,10))
         for i, (feat, items) in enumerate(data["features"].items()):
             for j, (classifier, model) in enumerate(items["classifier"].items()):
-                print(feat, classifier)
-                print(items["train"].shape, items["test"].shape, len(data["y_test"]))
                 index = j + i * len(items["classifier"].keys())
                 ax = axes.flatten()[index]
                 ax.axes.get_xaxis().get_label().set_visible(False)
@@ -103,7 +102,7 @@ def assignment_classification(plot=False):
         plt.xlabel("Predicted Label")
         plt.ylabel("Actual Label")
         plt.show()
-
+       
     ## Exercise 2.4: Construct a new test set by adding an intensity of 30 to the original test set
     # Recalculate and plot the confusion matrices
 
@@ -118,8 +117,7 @@ def assignment_classification(plot=False):
         _, axes = plt.subplots(nrows=3, ncols=2, figsize=(10,10))
         for i, (feat, items) in enumerate(data["features"].items()):
             for j, (classifier, model) in enumerate(items["classifier"].items()):
-                # print(feat, classifier)
-                # print(items["train"].shape, items["test"].shape, len(data["y_test"]))
+                
                 index = j + i * len(items["classifier"].keys())
                 ax = axes.flatten()[index]
                 ax.axes.get_xaxis().get_label().set_visible(False)
@@ -131,14 +129,14 @@ def assignment_classification(plot=False):
         plt.xlabel("Predicted Label")
         plt.ylabel("Actual Label")
         plt.show()
-
+        
     ## Exercise 2.5: Apply PCA to reduce the dimensionality to 20
     # Use sklearn.decomposition.PCA
     # Recompute and plot the confusion matrices for all feature and classifier combinations (6 in total)
     # Take a look at the code of the previous exercises and use the relevant parts to complete this exercise
     if plot:
         data["features_pca"]={}
-        pca = PCA(n_components=20)
+        pca = PCA(n_components=20,random_state=42)
         data["features_pca"]["int"] = {}
         data["features_pca"]["hog"] = {}
         data["features_pca"]["cnn"] = {}
@@ -197,7 +195,7 @@ def assignment_classification(plot=False):
         plt.xlabel("Predicted Label")
         plt.ylabel("Actual Label")
         plt.show()
-
+       
     ## Exercise 2.6: Evaluate the accuracy_score for varying values of k of the k-NN
     # Plot the accuracy_score against the k parameter
     if plot:
@@ -209,8 +207,11 @@ def assignment_classification(plot=False):
             y_pred = model.predict(data["features_pca"]["hog"]["test"])
             accuracy.append(accuracy_score(data["y_test"], y_pred))
         plt.plot(ks,accuracy)
+        ax=plt.gca()
+        ax.set_ylim([0.9,0.95])
+        ax.set_xticks(ks)
         plt.show()
-        
+       
     ## Exercise 2.7: Evaluate the accuracy_score for varying values of C of the SVM
     # Plot the accuracy_score against the k parameter
     if plot:
@@ -243,7 +244,8 @@ def assignment_classification(plot=False):
         
     # Save the results to disk to use in later exercises
     np.save("assignment_classification.npy", data)
-
+    
     return data
+
 if __name__ == "__main__":
     assignment_classification(plot=True)
