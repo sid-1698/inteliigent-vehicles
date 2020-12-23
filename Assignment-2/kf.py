@@ -64,7 +64,7 @@ class Kf:
 
         # define the linear dynamics
         #    You should define the F and H matrixes
-        self.F = np.array([[1,0,self.ts[-1],0],[0,1,0,self.ts[-1]],[0,0,1,0],[0,0,0,1]], dtype=float) # <-- student code should replace this
+        self.F = np.array([[1,0,1,0],[0,1,0,1],[0,0,1,0],[0,0,0,1]], dtype=float) # <-- student code should replace this
         self.H = np.array([[1,0,0,0],[0,1,0,0]], dtype=float) # <-- student code should replace this
         self.Sigma_x = np.array(np.diag([noise_var_x_pos,noise_var_x_pos,noise_var_x_vel,noise_var_x_vel])) # <-- student code should replace this (hint: see np.diag() function)
         self.Sigma_z = np.array(np.diag([noise_var_z,noise_var_z])) # <-- student code should replace this (hint: see np.diag() function)
