@@ -59,8 +59,8 @@ if __name__ == '__main__':
     # You will need to complete the code in
     #     kf_predict_step
 
-    m_init = np.zeros((4,1)) # initial mean
-    S_init = np.eye(4)     # initial covariance
+    m_init = np.zeros((4,1), dtype=np.float64) # initial mean
+    S_init = np.eye(4 , dtype=np.float64)    # initial covariance
     kf = Kf(m_init, S_init) # t = 0
 
     # let's run the prediction 5 times
@@ -107,6 +107,7 @@ if __name__ == '__main__':
     #      for each time step
     #  - there are T = 50 timesteps
     #  - scenario_version determines if the pedestrian walks or stands still
+
     scenario_version = 1 # 1 or 2
     objects, T = mot_scenario_single_target(scenario_version)
 
@@ -117,7 +118,7 @@ if __name__ == '__main__':
     ##  This makes sure that the randomness in experiment is repeatable.
     ##  Feel free to try out different values, which should result in slightly
     ##  different measurements and random noise.
-    np.random.seed(42)
+    np.random.seed(77)
 
     ## create simulated measurments for all T time steps
     measurements = []
@@ -150,7 +151,7 @@ if __name__ == '__main__':
     ##   And when you want to animate steps 10 to 15 only, use
     ##      for step = 10:15
     ##
-    plt.pause(1.)   
+    plt.pause(1.)
     for step in range(0, T): # <-- you can change this to a particular time step
         
         # draw the true object positions as a '*' mark
@@ -170,7 +171,7 @@ if __name__ == '__main__':
             [x.remove() for x in lines_target]
             line_meas.remove()
     
-    #plt.show()
+    plt.show()
     input("Press Enter to continue")
     ## Exercise 1.6: KF initialization and prediction on pedestrian scenario
     # Now we can run your KF initialization and prediction functions
@@ -214,9 +215,9 @@ if __name__ == '__main__':
     # create the tracker
     kf = Kf(m_init1, S_init1)
     
-    # here we scale up/down the process and observation noise
-    #kf.Sigma_x = kf.Sigma_x * 1e0; % <-- ** Exercise 1.8 **
-    #kf.Sigma_z = kf.Sigma_z * 1e0; % <-- ** Exercise 1.8 **
+    #here we scale up/down the process and observation noise
+    kf.Sigma_x = kf.Sigma_x * 1e-2 #; % <-- ** Exercise 1.8 ** #Try with scale factor as 100
+    kf.Sigma_z = kf.Sigma_z * 1e-2 #; % <-- ** Exercise 1.8 ** #Try with scale factor as 100
     
     # feed the measurments, filter the results
     kf = run_single_kf(kf, sensor, measurements)

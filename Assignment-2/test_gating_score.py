@@ -27,16 +27,19 @@ def test_gating_score(kf, meas_r):
     
     # *NOTE*
     # the gating threshold is some fixed number for YOU (student) to determine
-    gating_threshold = None
+    gating_threshold = 7
     
     # this will be the score of the measurement for this KF    
     #   (the score will also be used for data association later on)
-    score = None
-    
+    score = 0
+    for i in range(len(meas_r)):
+        score+= (meas_r[i][0] - pred_z_mu[i][0]) **2
+    score=np.sqrt(score)
 #########################
 ## YOUR_CODE_GOES_HERE ##
 #########################
 
     # compare score to threshold
+    
     is_ok = score < gating_threshold
     return is_ok, score

@@ -36,7 +36,11 @@ def associate_measurements_to_tracks(meas_pos, kfs, is_active):
         for j in active_js: # iterate over active KFs ...
             # get 2D location of r-th measurement
             meas_r = meas_pos[:,r]
-            
+            is_ok,score=test_gating_score(kfs[j],meas_r)
+            if is_ok: 
+                if score>best_scores[r]:
+                    best_scores[r] = score
+                    assignment[r] = j
             # Here we call test_gating_score to perform the gating test.
             # We also obtain the gating score.
             #

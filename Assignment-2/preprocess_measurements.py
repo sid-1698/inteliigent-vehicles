@@ -2,7 +2,7 @@ from scipy.signal import medfilt
 
 def preprocess_measurements(measurements):
     assert type(measurements) == list
-    filter_order = 1  # <-- ** Exercise 1.10 ** order of the median filter
+    filter_order = 1  # <-- ** Exercise 1.10 ** order of the median filter #try filter orders 3 and 7
 
     T = len(measurements)
     # iterate over all time steps

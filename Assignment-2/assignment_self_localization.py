@@ -78,7 +78,7 @@ assert particles.shape == (3, 1000)
 # we will assume for now that the control input remains the same
 # during the following 20 predict steps.
 velocity = 1. # 1 m/s % <--  you can change this, of course
-steering_angle = 0. # (in radians) 0 = go straight % <-- you can change this, of course
+steering_angle = 0 # (in radians) 0 = go straight % <-- you can change this, of course
 control_input = np.array([velocity, steering_angle])
 
 # draw setup
@@ -139,7 +139,7 @@ particle_meas = particle_sensor.observe_point(particle_meas,\
 
 log_weight = map_measurement_loglik(particle, map_, measurement, sensor)
 if log_weight == -9999:
-    warnings.warning('You did not implement map_measurement_loglik correctly yet!',
+    warnings.warn('You did not implement map_measurement_loglik correctly yet!',
                         UserWarning)
 print(f'expected measurement at particle x_t\n'
         f'log weight = {log_weight:.4}, i.e. '
@@ -188,7 +188,7 @@ N = 100 # num particles % <-- change this
 INITIAL_POSITION_KNOWN = True # <-- ** Exercise 2.7 **
 
 # compute number of particles to reinitialize each timestep
-frac_reinit = 0.0 # <-- ** Exercise 2.8 ** set fraction here
+frac_reinit = 1  # <-- ** Exercise 2.8 ** set fraction here
 N_reinit = np.ceil(N * frac_reinit) # number of particles to reinitialize
 N_reinit = int(N_reinit)
 
@@ -225,12 +225,10 @@ for t in range(T):
 
     # Exercise 2.8: randomly reinitialize N_reinit particles
     #   Tip: use pf_init_freespace here
-
-    
 #########################
 ## YOUR_CODE_GOES_HERE ##
 #########################
-
+    particles[:,:N_reinit] = pf_init_freespace(N_reinit,map_)
     # show particles
     lines_particles_1 = ax.scatter(particles[0,:], particles[1,:], c='m', marker='.')
 

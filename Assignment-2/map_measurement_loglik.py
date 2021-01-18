@@ -26,7 +26,10 @@ def map_measurement_loglik(particle, map_, meas, sensor):
     #  Log weight = \Sum_{r=1}^R -((z(r) - \hat{z}(r)).^ 2/(2*sigma2));
     sigma2 = 50 # the variance sigma
 
-    log_weight = -9999 # <-- dummy value (change this!)
+    log_weight = 0 # <-- dummy value (change this!)
+    for r in range(len(z)):
+        log_weight+= (-1*(z[r] - z_hat[r]) **2)/(2*sigma2)
+    # log_weight= -log_weight/(2*sigma2) 
 #########################
 ## YOUR_CODE_GOES_HERE ##
 #########################

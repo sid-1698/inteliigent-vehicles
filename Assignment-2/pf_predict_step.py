@@ -26,7 +26,16 @@ def pf_predict_step(particles, control_input, dt):
     #    [  x_t  ]      [  x_t-1  ]    [ v * dt * sin(theta_t-1) ]
     #    [  y_t  ]  =   [  y_t-1  ] +  [ v * dt * cos(theta_t-1) ]
     #    [theta_t]      [theta_t-1]    [       omega * dt        ]
+    # for i in range(1,N):
+    #     particles[0,i] = particles[0,i-1] + velocity* dt * np.sin(particles[2,i-1])
+    #     particles[1,i] = particles[1,i-1] + velocity* dt * np.cos(particles[2,i-1])
+    #     particles[2,i] = particles[2,i-1] + steering_angle * dt
     
+    x_t = np.array([velocity*dt*np.sin(particles[2,:])])
+    y_t = np.array([velocity*dt*np.cos(particles[2,:])])
+    theta_t = np.array([np.transpose(np.squeeze(np.ones([1,int(N)])*steering_angle*dt))])
+    predict = np.array([x_t,y_t,theta_t])
+    particles=particles+np.squeeze(predict)
 #########################
 ## YOUR_CODE_GOES_HERE ##
 #########################
@@ -43,6 +52,16 @@ def pf_predict_step(particles, control_input, dt):
         .1,  # std.dev. on y position is 0.2 meters
         (2.*np.pi / 24.)**2  # std.dev. on angle is 1/24 of full 360 degrees circle
     ])
+    # eta = np.zeros((3,N))
+    # eta = np.random.multivariate_normal(np.array([0,0,0]),Sigma_x,N)
+    # particles+= np.transpose(eta)
+    
+    for i in range(len(particles[0])):
+         eta = np.random.multivariate_normal(np.array([0,0,0]),Sigma_x,1)
+         eta = np.squeeze(eta)
+         particles[:,i] = particles[:,i] + np.transpose(eta)
+        
+        
 
 #########################
 ## YOUR_CODE_GOES_HERE ##
@@ -52,5 +71,4 @@ def pf_predict_step(particles, control_input, dt):
     # is on the circular domain, let's ensure all values remain on the
     # circular [0, 2*pi] domain.
     particles[2,:] = np.mod(particles[2,:], 2.*np.pi)
-
     return particles

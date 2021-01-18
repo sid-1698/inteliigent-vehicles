@@ -9,7 +9,10 @@ def pf_update_step(particles, meas, map_, sensor):
 
     # this list will contain the (log of the) weights for all N particles
     log_weights = np.zeros(N) - 9999
-
+    
+    for i,particle in enumerate(particles):
+        log_weights[i] = map_measurement_loglik(particle,map_,meas,sensor)
+        
     ## evaluate particle likelihood
 
     # For each particle:
@@ -54,8 +57,9 @@ def pf_update_step(particles, meas, map_, sensor):
 #########################
 ## YOUR_CODE_GOES_HERE ##
 #########################
-
+   # np.random.seed(42)  in case if you want to reproduce, uncomment.
+    sample =np.random.choice(N,N,p=probs,replace=True) #Try for 100 and 10
+    new_particles= particles[:,sample]
     # new_particles should by a 3 x N matrix
     assert new_particles.shape == (3,N)
-
     return new_particles
