@@ -1,4 +1,4 @@
-# intelligent-vehicles
+# Intelligent Vehicles
 
 ### This repo contains three different code section which form the crux of any intelligent vehicle.
 1. Assignment 1 - Object Detection using HoG feature extraction to detect pedestrians from a continous video fraame.
