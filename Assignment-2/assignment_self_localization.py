@@ -225,6 +225,8 @@ for t in range(T):
 
     # Exercise 2.8: randomly reinitialize N_reinit particles
     #   Tip: use pf_init_freespace here
+
+    
 #########################
 ## YOUR_CODE_GOES_HERE ##
 #########################

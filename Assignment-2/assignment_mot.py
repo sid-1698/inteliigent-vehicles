@@ -150,7 +150,7 @@ if __name__ == '__main__':
     ##   And when you want to animate steps 10 to 15 only, use
     ##      for step = 10:15
     ##
-    plt.pause(1.)
+    plt.pause(1.)   
     for step in range(0, T): # <-- you can change this to a particular time step
         
         # draw the true object positions as a '*' mark
